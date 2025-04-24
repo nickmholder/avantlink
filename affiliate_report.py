@@ -4,6 +4,7 @@ import streamlit as st
 import requests
 import csv
 from datetime import datetime
+import base64
 
 st.title("Affiliate Report Generator")
 
@@ -66,4 +67,11 @@ if st.button("Generate Report"):
             writer.writerow([])
             writer.writerow([f"Affiliate Report for {m} between {start_date} and {end_date}"])
 
-        st.success(f"{filename} saved!")
+        # Show success message and provide download link
+        st.success(f"{filename} generated successfully!")
+
+        # Generate download link
+        with open(filename, "rb") as file:
+            b64 = base64.b64encode(file.read()).decode()
+            href = f'<a href="data:file/csv;base64,{b64}" download="{filename}">📥 Download {filename}</a>'
+            st.markdown(href, unsafe_allow_html=True)
